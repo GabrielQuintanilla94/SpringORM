@@ -8,8 +8,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String inicio() {
-        // Carga la vista src/main/resources/templates/index.html
+        
         return "index";
     }
 }
-

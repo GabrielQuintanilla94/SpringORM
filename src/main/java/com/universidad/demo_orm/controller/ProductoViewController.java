@@ -1,4 +1,5 @@
 package com.universidad.demo_orm.controller;
+
 import com.universidad.demo_orm.entity.Producto;
 import com.universidad.demo_orm.repository.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,43 +8,49 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/vista/productos")
+@RequestMapping("/vista/productos") // Esta es la "puerta" principal
 public class ProductoViewController {
 
-    @Autowired
+    @Autowired // IMPORTANTE: Esto conecta la base de datos
     private ProductoRepository productoRepository;
 
-    // LISTA DE PRODUCTOS
+    // 1. LISTAR PRODUCTOS (La página que te da error 500)
     @GetMapping
     public String listarProductos(Model model) {
-        model.addAttribute("listaProductos", productoRepository.findAll());
-        return "productos-lista"; // templates/productos-lista.html
+        // Buscamos todos los productos en la BD
+        var lista = productoRepository.findAll();
+        
+        // OJO AQUÍ: El nombre "listaProductos" debe ser IDÉNTICO al de tu HTML (línea 34)
+        model.addAttribute("listaProductos", lista);
+        
+        // Retornamos el nombre del archivo HTML exacto (sin .html)
+        return "productos-lista";
     }
 
-    // FORMULARIO NUEVO PRODUCTO
-    @GetMapping("/nuevo")
-    public String mostrarFormularioNuevo(Model model) {
+    // 2. MOSTRAR FORMULARIO DE GUARDAR
+    @GetMapping("/crear")
+    public String mostrarFormularioCrear(Model model) {
         model.addAttribute("producto", new Producto());
-        return "producto-form"; // templates/producto-form.html
+        return "producto-form";
     }
 
-    // GUARDAR (CREAR / EDITAR)
+    // 3. GUARDAR (Recibe los datos del form)
     @PostMapping("/guardar")
     public String guardarProducto(@ModelAttribute Producto producto) {
         productoRepository.save(producto);
-        return "redirect:/vista/productos";
+        return "redirect:/vista/productos"; // Nos regresa a la lista
     }
 
-    // EDITAR
+    // 4. MOSTRAR FORMULARIO DE EDITAR
     @GetMapping("/editar/{id}")
     public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
         Producto producto = productoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado: " + id));
+                .orElseThrow(() -> new IllegalArgumentException("ID inválido: " + id));
         model.addAttribute("producto", producto);
         return "producto-form";
     }
 
-    // ELIMINAR
+    // 5. ELIMINAR
     @GetMapping("/eliminar/{id}")
     public String eliminarProducto(@PathVariable Long id) {
         productoRepository.deleteById(id);

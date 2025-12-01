@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Lista de Productos</title>
-    <  <link rel="stylesheet"
-             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
 
+    <!-- Bootstrap -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+
+    <!-- Tu CSS -->
     <link rel="stylesheet" th:href="@{/css/estilos.css}">
 </head>
 <body class="bg-light">
@@ -17,44 +20,60 @@
         + Nuevo producto
     </a>
 
-    <table class="table table-striped table-bordered">
-        <thead class="table-dark">
-        <tr>
-            <th>ID</th>
-            <!-- Cambia estos campos según tu entidad -->
-            <th>Nombre</th>
-            <th>Precio Compra</th>
-            <th>Precio Venta</th>
-            <th>Unidad</th>
-            <th>Cantidad</th>
-            <th>Acciones</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="prod : ${listaProductos}">
-            <td th:text="${prod.idProducto}">1</td>
-            <!-- Si tienes nombreProducto en tu entity, úsalo así: -->
-            <td th:text="${prod.nombreProducto}">Nombre demo</td>
-            <td th:text="${prod.precioCompra}">0.00</td>
-            <td th:text="${prod.precioVenta}">0.00</td>
-            <td th:text="${prod.unidadMedida}">Unidad</td>
-            <td th:text="${prod.estado}">1</td>
+    <div th:if="${listaProductos == null or #lists.isEmpty(listaProductos)}">
+        <div class="alert alert-info">No hay productos registrados.</div>
+    </div>
 
-            <td>
-                <a class="btn btn-sm btn-warning"
-                   th:href="@{'/vista/productos/editar/' + ${prod.idProducto}}">
-                    Editar
-                </a>
-                <a class="btn btn-sm btn-danger"
-                   th:href="@{'/vista/productos/eliminar/' + ${prod.idProducto}}"
-                   onclick="return confirm('¿Seguro que deseas eliminar este producto?');">
-                    Eliminar
-                </a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <div th:if="${listaProductos != null and !#lists.isEmpty(listaProductos)}">
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Precio Compra</th>
+                <th>Precio Venta</th>
+                <th>Unidad</th>
+                <th>Cantidad</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Asegúrate de que los nombres aquí coincidan con los getters de tu entidad Producto -->
+            <tr th:each="prod : ${listaProductos}">
+                <!-- Ajusta 'idProducto' a 'id' si tu getter es getId() -->
+                <td th:text="${prod.idProducto != null ? prod.idProducto : prod.id}">1</td>
 
+                <!-- Ajusta 'nombreProducto' a 'nombre' si tu getter es getNombre() -->
+                <td th:text="${prod.nombreProducto != null ? prod.nombreProducto : prod.nombre}">Nombre demo</td>
+
+                <td th:text="${prod.precioCompra}">0.00</td>
+                <td th:text="${prod.precioVenta}">0.00</td>
+
+                <!-- Ajusta unidadMedida / unidad según tu entidad -->
+                <td th:text="${prod.unidadMedida != null ? prod.unidadMedida : prod.unidad}">Unidad</td>
+
+                <!-- Si 'estado' es un flag, cámbialo por 'cantidad' si esa es la columna que quieres -->
+                <td th:text="${prod.cantidad != null ? prod.cantidad : prod.estado}">0</td>
+
+                <td>
+                    <a class="btn btn-sm btn-warning"
+                       th:href="@{'/vista/productos/editar/' + (prod.idProducto != null ? prod.idProducto : prod.id)}">
+                        Editar
+                    </a>
+                    <a class="btn btn-sm btn-danger"
+                       th:href="@{'/vista/productos/eliminar/' + (prod.idProducto != null ? prod.idProducto : prod.id)}"
+                       onclick="return confirm('¿Seguro que deseas eliminar este producto?');">
+                        Eliminar
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+

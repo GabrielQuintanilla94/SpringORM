@@ -9,50 +9,55 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/vista/productos") // Esta es la "puerta" principal
+@RequestMapping("/vista/productos")
 public class ProductoViewController {
 
-    @Autowired // IMPORTANTE: Esto conecta la base de datos
+    @Autowired
     private ProductoRepository productoRepository;
 
     @Autowired
-    private CategoriaRepository categoriaRepository; // 1. Inyectamos el repositorio de categorías
+    private CategoriaRepository categoriaRepository;
 
-    // 1. LISTAR PRODUCTOS (La página que te da error 500)
+    // 1. LISTAR PRODUCTOS
     @GetMapping
     public String listarProductos(Model model) {
-        model.addAttribute("listaProductos", productoRepository.findAll());
-        return "productos-lista"; // templates/productos-lista.html
+        var lista = productoRepository.findAll();
+        model.addAttribute("listaProductos", lista);
+        return "productos-lista";
     }
 
-    // 2. MOSTRAR FORMULARIO DE GUARDAR
+    // 2. MOSTRAR FORMULARIO DE CREAR
     @GetMapping("/crear")
     public String mostrarFormularioCrear(Model model) {
         model.addAttribute("producto", new Producto());
-        return "producto-form"; // templates/producto-form.html
-    }
-
-    // GUARDAR (CREAR / EDITAR)
-    @PostMapping("/guardar")
-    public String guardarProducto(@ModelAttribute Producto producto) {
-        productoRepository.save(producto);
-        return "redirect:/vista/productos"; // Nos regresa a la lista
-    }
-
-    // 4. MOSTRAR FORMULARIO DE EDITAR
-    @GetMapping("/editar/{id}")
-    public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
-        Producto producto = productoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("ID inválido: " + id));
-        model.addAttribute("producto", producto);
-        // 2. Enviamos la lista de categorías también al editar
+        // Enviamos la lista de categorías para el <select>
         model.addAttribute("listaCategorias", categoriaRepository.findAll());
         return "producto-form";
     }
 
-    // ELIMINAR
+    // 3. GUARDAR (Recibe los datos del form)
+    @PostMapping("/guardar")
+    public String guardarProducto(@ModelAttribute Producto producto) {
+        productoRepository.save(producto);
+        return "redirect:/vista/productos";
+    }
+
+    // 4. MOSTRAR FORMULARIO DE EDITAR
+    @GetMapping("/editar/{id}")
+    public String mostrarFormularioEditar(@PathVariable Integer id, Model model) { // <-- CAMBIO AQUÍ: Integer
+        Producto producto = productoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("ID inválido: " + id));
+        
+        model.addAttribute("producto", producto);
+        // Enviamos la lista de categorías también al editar
+        model.addAttribute("listaCategorias", categoriaRepository.findAll());
+        
+        return "producto-form";
+    }
+
+    // 5. ELIMINAR
     @GetMapping("/eliminar/{id}")
-    public String eliminarProducto(@PathVariable Long id) {
+    public String eliminarProducto(@PathVariable Integer id) { // <-- CAMBIO AQUÍ: Integer
         productoRepository.deleteById(id);
         return "redirect:/vista/productos";
     }

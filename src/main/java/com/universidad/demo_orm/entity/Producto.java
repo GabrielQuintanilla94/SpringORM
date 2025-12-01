@@ -1,105 +1,30 @@
 package com.universidad.demo_orm.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "Producto")
+@Data
 public class Producto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_producto")
-    private Long idProducto;
+    private Integer id_producto;
 
-    @Column(name = "nombre_producto")
-    private String nombreProducto;
+    private String nombre_producto;
 
     @ManyToOne
-    @JoinColumn(name = "id_categoria")
+    @JoinColumn(name = "id_categoria", nullable = false)
     private Categoria categoria;
 
-    @Column(name = "precio_compra")
-    private BigDecimal precioCompra;
+    private BigDecimal precio_compra;
+    private BigDecimal precio_venta;
 
-    @Column(name = "precio_venta")
-    private BigDecimal precioVenta;
-
-    @Column(name = "unidad_medida")
-    private String unidadMedida;
-
-    @Column(name = "imagen_url")
-    private String imagenUrl;
-
-    private Integer estado;
-
-
-    public Producto() {
-    }
-
-
-
-    public Long getIdProducto() {
-        return idProducto;
-    }
-
-    public void setIdProducto(Long idProducto) {
-        this.idProducto = idProducto;
-    }
-
-    public String getNombreProducto() {
-        return nombreProducto;
-    }
-
-    public void setNombreProducto(String nombreProducto) {
-        this.nombreProducto = nombreProducto;
-    }
-
-    public Categoria getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
-    }
-
-    public BigDecimal getPrecioCompra() {
-        return precioCompra;
-    }
-
-    public void setPrecioCompra(BigDecimal precioCompra) {
-        this.precioCompra = precioCompra;
-    }
-
-    public BigDecimal getPrecioVenta() {
-        return precioVenta;
-    }
-
-    public void setPrecioVenta(BigDecimal precioVenta) {
-        this.precioVenta = precioVenta;
-    }
-
-    public String getUnidadMedida() {
-        return unidadMedida;
-    }
-
-    public void setUnidadMedida(String unidadMedida) {
-        this.unidadMedida = unidadMedida;
-    }
-
-    public String getImagenUrl() {
-        return imagenUrl;
-    }
-
-    public void setImagenUrl(String imagenUrl) {
-        this.imagenUrl = imagenUrl;
-    }
-
-    public Integer getEstado() {
-        return estado;
-    }
-
-    public void setEstado(Integer estado) {
-        this.estado = estado;
-    }
+    // Campos nuevos necesarios para la lógica de Cajas
+    private Integer unidades_por_caja;
+    private String unidad_medida;
+    private String imagen_url;
+    private Boolean estado;
 }

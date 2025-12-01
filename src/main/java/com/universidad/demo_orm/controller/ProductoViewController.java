@@ -1,6 +1,7 @@
 package com.universidad.demo_orm.controller;
 
 import com.universidad.demo_orm.entity.Producto;
+import com.universidad.demo_orm.repository.CategoriaRepository;
 import com.universidad.demo_orm.repository.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,27 +15,24 @@ public class ProductoViewController {
     @Autowired // IMPORTANTE: Esto conecta la base de datos
     private ProductoRepository productoRepository;
 
+    @Autowired
+    private CategoriaRepository categoriaRepository; // 1. Inyectamos el repositorio de categorías
+
     // 1. LISTAR PRODUCTOS (La página que te da error 500)
     @GetMapping
     public String listarProductos(Model model) {
-        // Buscamos todos los productos en la BD
-        var lista = productoRepository.findAll();
-        
-        // OJO AQUÍ: El nombre "listaProductos" debe ser IDÉNTICO al de tu HTML (línea 34)
-        model.addAttribute("listaProductos", lista);
-        
-        // Retornamos el nombre del archivo HTML exacto (sin .html)
-        return "productos-lista";
+        model.addAttribute("listaProductos", productoRepository.findAll());
+        return "productos-lista"; // templates/productos-lista.html
     }
 
     // 2. MOSTRAR FORMULARIO DE GUARDAR
     @GetMapping("/crear")
     public String mostrarFormularioCrear(Model model) {
         model.addAttribute("producto", new Producto());
-        return "producto-form";
+        return "producto-form"; // templates/producto-form.html
     }
 
-    // 3. GUARDAR (Recibe los datos del form)
+    // GUARDAR (CREAR / EDITAR)
     @PostMapping("/guardar")
     public String guardarProducto(@ModelAttribute Producto producto) {
         productoRepository.save(producto);
@@ -47,10 +45,12 @@ public class ProductoViewController {
         Producto producto = productoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("ID inválido: " + id));
         model.addAttribute("producto", producto);
+        // 2. Enviamos la lista de categorías también al editar
+        model.addAttribute("listaCategorias", categoriaRepository.findAll());
         return "producto-form";
     }
 
-    // 5. ELIMINAR
+    // ELIMINAR
     @GetMapping("/eliminar/{id}")
     public String eliminarProducto(@PathVariable Long id) {
         productoRepository.deleteById(id);

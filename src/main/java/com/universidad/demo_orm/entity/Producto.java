@@ -1,12 +1,10 @@
 package com.universidad.demo_orm.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import java.math.BigDecimal; 
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "Producto")
-@Data
 public class Producto {
 
     @Id
@@ -17,8 +15,8 @@ public class Producto {
     @Column(name = "nombre_producto")
     private String nombreProducto;
 
-    @ManyToOne 
-    @JoinColumn(name = "id_categoria") 
+    @ManyToOne
+    @JoinColumn(name = "id_categoria")
     private Categoria categoria;
 
     @Column(name = "precio_compra")
@@ -34,4 +32,74 @@ public class Producto {
     private String imagenUrl;
 
     private Integer estado;
+
+
+    public Producto() {
+    }
+
+
+
+    public Long getIdProducto() {
+        return idProducto;
+    }
+
+    public void setIdProducto(Long idProducto) {
+        this.idProducto = idProducto;
+    }
+
+    public String getNombreProducto() {
+        return nombreProducto;
+    }
+
+    public void setNombreProducto(String nombreProducto) {
+        this.nombreProducto = nombreProducto;
+    }
+
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
+
+    public BigDecimal getPrecioCompra() {
+        return precioCompra;
+    }
+
+    public void setPrecioCompra(BigDecimal precioCompra) {
+        this.precioCompra = precioCompra;
+    }
+
+    public BigDecimal getPrecioVenta() {
+        return precioVenta;
+    }
+
+    public void setPrecioVenta(BigDecimal precioVenta) {
+        this.precioVenta = precioVenta;
+    }
+
+    public String getUnidadMedida() {
+        return unidadMedida;
+    }
+
+    public void setUnidadMedida(String unidadMedida) {
+        this.unidadMedida = unidadMedida;
+    }
+
+    public String getImagenUrl() {
+        return imagenUrl;
+    }
+
+    public void setImagenUrl(String imagenUrl) {
+        this.imagenUrl = imagenUrl;
+    }
+
+    public Integer getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Integer estado) {
+        this.estado = estado;
+    }
 }

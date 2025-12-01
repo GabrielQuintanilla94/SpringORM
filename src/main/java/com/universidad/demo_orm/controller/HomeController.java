@@ -5,11 +5,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class HomeController {
-
     @GetMapping("/")
     public String inicio() {
-        // Carga la vista src/main/resources/templates/index.html
-        return "index";
+        return "index"; // carga templates/index.html y Thymeleaf resolverá th:href
     }
 }
+
 

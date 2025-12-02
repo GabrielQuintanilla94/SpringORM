@@ -12,7 +12,7 @@
             <h3 th:text="${producto.id_producto == null ? 'Nuevo Producto' : 'Editar Producto'}"></h3>
         </div>
         <div class="card-body">
-            
+
             <form th:action="@{/vista/productos/guardar}" th:object="${producto}" method="post">
                 <input type="hidden" th:field="*{id_producto}" />
 
@@ -24,10 +24,10 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Categoría</label>
-                        <select class="form-select" th:field="*{categoria}" required>
+                        <select class="form-select" th:field="*{categoria.id_categoria}" required>
                             <option value="">-- Seleccionar --</option>
-                            <option th:each="cat : ${listaCategorias}" 
-                                    th:value="${cat.id_categoria}" 
+                            <option th:each="cat : ${listaCategorias}"
+                                    th:value="${cat.id_categoria}"
                                     th:text="${cat.nombre_categoria}"></option>
                         </select>
                     </div>
@@ -57,12 +57,20 @@
                     <input type="text" class="form-control" th:field="*{imagen_url}" placeholder="http://..." />
                 </div>
 
+                <div class="mb-3">
+                    <label class="form-label">Estado</label>
+                    <select class="form-select" th:field="*{estado}">
+                        <option value="true">Activo</option>
+                        <option value="false">Inactivo</option>
+                    </select>
+                </div>
+
                 <div class="d-grid gap-2">
                     <button type="submit" class="btn btn-success btn-lg">Guardar Producto</button>
                     <a href="/vista/productos" class="btn btn-secondary">Cancelar</a>
                 </div>
             </form>
-            
+
         </div>
     </div>
 </div>
